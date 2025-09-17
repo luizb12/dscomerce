@@ -2,6 +2,7 @@ package com.dscommerce.devsuperior.entities;
 
 import jakarta.persistence.*;
 
+import java.security.Timestamp;
 import java.time.Instant;
 import java.util.HashSet;
 import java.util.List;
@@ -13,9 +14,9 @@ public class Order {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private long id;
+    private Long id;
 
-    @Column(columnDefinition = "TIMESTAMP WITHOUT TIME ZONE")
+    @Column(columnDefinition = "timestamp without time zone")
     private Instant moment;
     private OrderStatus status;
 
@@ -23,45 +24,22 @@ public class Order {
     @JoinColumn(name = "client_id")
     private User client;
 
-    @OneToOne(mappedBy = "order", cascade = CascadeType.ALL)
-    private Payment payment;
-
-    @OneToMany(mappedBy = "id.order")
-    private Set<OrderItem> items = new HashSet<>();
-
-    public Order (){
+    public Order(){
     }
 
-    public Order(long id, Payment payment, User client, OrderStatus status, Instant moment) {
+    public Order(Long id, Instant moment, OrderStatus status, User client) {
         this.id = id;
-        this.payment = payment;
-        this.client = client;
-        this.status = status;
         this.moment = moment;
+        this.status = status;
+        this.client = client;
     }
 
-    public long getId() {
+    public Long getId() {
         return id;
     }
 
-    public void setId(long id) {
+    public void setId(Long id) {
         this.id = id;
-    }
-
-    public User getClient() {
-        return client;
-    }
-
-    public void setClient(User client) {
-        this.client = client;
-    }
-
-    public OrderStatus getStatus() {
-        return status;
-    }
-
-    public void setStatus(OrderStatus status) {
-        this.status = status;
     }
 
     public Instant getMoment() {
@@ -72,32 +50,19 @@ public class Order {
         this.moment = moment;
     }
 
-    public Payment getPayment() {
-        return payment;
+    public OrderStatus getStatus() {
+        return status;
     }
 
-    public void setPayment(Payment payment) {
-        this.payment = payment;
+    public void setStatus(OrderStatus status) {
+        this.status = status;
     }
 
-    public Set<OrderItem> getItems() {
-        return items;
+    public User getClient() {
+        return client;
     }
 
-    public List<Product> getProducts(){
-        return items.stream().map(x -> x.getProduct()).toList();
-    }
-
-    @Override
-    public boolean equals(Object o) {
-        if (o == null || getClass() != o.getClass()) return false;
-
-        Order order = (Order) o;
-        return id == order.id;
-    }
-
-    @Override
-    public int hashCode() {
-        return Long.hashCode(id);
+    public void setClient(User client) {
+        this.client = client;
     }
 }
